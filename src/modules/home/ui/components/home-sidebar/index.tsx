@@ -5,7 +5,7 @@ import { PersonalSection } from "./personal-section";
 
 export function HomeSidebar() {
   return (
-    <Sidebar className="z-40 border-none pt-16">
+    <Sidebar className="z-40 border-none pt-16" collapsible="icon">
       <SidebarContent className="bg-background">
         <MainSection />
         <Separator />
