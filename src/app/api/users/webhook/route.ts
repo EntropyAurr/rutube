@@ -6,10 +6,10 @@ import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 
 export async function POST(req: Request) {
-  const SIGNING_SECRET = process.env.CLERK_SIGNING_SECRET;
+  const SIGNING_SECRET = process.env.CLERK_WEBHOOK_SIGNING_SECRET;
 
   if (!SIGNING_SECRET) {
-    throw new Error("Error: Please add CLERK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local");
+    throw new Error("Error: Please add CLERK_WEBHOOK_SIGNING_SECRET from Clerk Dashboard to .env or .env.local");
   }
 
   // Create new Svix instance with secret
@@ -44,14 +44,14 @@ export async function POST(req: Request) {
     return new Response("Error: Verification error", { status: 400 });
   }
 
-  // Do something with payload
+  // Actions with payload
   const eventType = evt.type;
 
   if (eventType === "user.created") {
     const { data } = evt;
 
     await db.insert(users).values({
-      clearId: data.id,
+      clerkId: data.id,
       name: `${data.first_name} ${data.last_name}`,
       imageUrl: data.image_url,
     });
@@ -64,7 +64,7 @@ export async function POST(req: Request) {
       return new Response("Missing user id", { status: 400 });
     }
 
-    await db.delete(users).where(eq(users.clearId, data.id));
+    await db.delete(users).where(eq(users.clerkId, data.id));
   }
 
   if (eventType === "user.updated") {
@@ -76,7 +76,7 @@ export async function POST(req: Request) {
         name: `${data.first_name} ${data.last_name}`,
         imageUrl: data.image_url,
       })
-      .where(eq(users.clearId, data.id));
+      .where(eq(users.clerkId, data.id));
   }
 
   return new Response("Webhook received", { status: 200 });
