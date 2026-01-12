@@ -1,3 +1,5 @@
+// Defining a router
+
 import { categoriesRouter } from "@/modules/categories/server/procedures";
 import { createTRPCRouter } from "../init";
 

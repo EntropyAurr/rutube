@@ -1,6 +1,7 @@
 import { pgTable, text, timestamp, uniqueIndex, uuid } from "drizzle-orm/pg-core";
 
 // Create data tables, then run bunx drizzle-kit push to apply changes to the database
+// Table: array of objects
 export const users = pgTable(
   "users",
   {

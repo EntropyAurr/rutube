@@ -1,0 +1,23 @@
+1/ tRPC: 
+- TypeScript-first framework for building end-to-end type-safe APIs.
+
+2/ Routers:
+- Responsible for mapping incoming requests to their respective handlers, which are determined by the URL of the request.
+
+3/ Route:
+- A designated path or pattern in a web application.
+- Each route is associated with an action or a set of actions. These actions determine what the application should do when a user accesses a particular path.
+
+4/ Endpoint:
+- Endpoints function a little like phone numbers: just as a user dials a phone number to reach a certain person or business, API clients (the software making an API call) provide an endpoint URL to reach a specific resource. An endpoint URL provides the location of a resource on an API server and helps connect the API client with the resource it is requesting. It essentially tells the server, “the resource that I need is located here.”
+
+5/ trpc/client.tsx is the entrypoint when consuming your tRPC API from client components.
+
+6/ typeof window !== "undefined" --> meaning: "Am I running on the browser?"
+7/ typeof window === "undefined" --> meaning: "Am I running on the server?"
+
+8/ getUrl() function in client.tsx:
+tRPC needs a consistent endpoint to send its queries and mutations. Without this function, your code would break in one of two scenarios:
+- Server-Side Rendering (SSR): If your layout.tsx tries to fetch data before the page reaches the user, it needs an absolute URL (starting with http) because there is no browser "origin" yet.
+- Deployment: If you hardcoded localhost:3000, your app would work on your laptop but fail immediately once you deployed it to the internet because the production server would try to "call itself" at a local address that doesn't exist in the cloud.
+
