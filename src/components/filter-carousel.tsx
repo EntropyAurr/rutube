@@ -18,8 +18,8 @@ interface FilterCarouselProps {
 
 export function FilterCarousel({ value, isLoading, onSelect, data }: FilterCarouselProps) {
   const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
+  const [current, setCurrent] = useState(0); // current item's index position
+  const [count, setCount] = useState(0); // number of item
 
   useEffect(() => {
     if (!api) return;

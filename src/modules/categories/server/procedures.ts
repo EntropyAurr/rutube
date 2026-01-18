@@ -1,3 +1,5 @@
+// this file is like useCabins, useSongs,...
+
 import { db } from "@/db";
 import { categories } from "@/db/schema";
 import { baseProcedure, createTRPCRouter } from "@/trpc/init";

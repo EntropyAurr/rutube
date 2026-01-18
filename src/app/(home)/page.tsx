@@ -10,7 +10,7 @@ interface PageProps {
 export default async function Page({ searchParams }: PageProps) {
   const { categoryId } = await searchParams;
 
-  void trpc.categories.getMany.prefetch();
+  void trpc.categories.getMany.prefetch(); // create the cache in the server
 
   return (
     <HydrateClient>

@@ -1,3 +1,5 @@
+// this file is like an api file
+
 import { db } from "@/db";
 import { categories } from "@/db/schema";
 

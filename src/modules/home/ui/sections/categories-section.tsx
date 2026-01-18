@@ -26,7 +26,7 @@ function CategoriesSkeleton() {
 
 const CategoriesSectionSuspense = ({ categoryId }: CategoriesSectionProps) => {
   const router = useRouter();
-  const [categories] = trpc.categories.getMany.useSuspenseQuery();
+  const [categories] = trpc.categories.getMany.useSuspenseQuery(); // access the cached that has been stored in the server
 
   const data = categories.map((category) => ({
     value: category.id,
