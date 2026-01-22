@@ -1,0 +1,50 @@
+import { z } from "zod";
+import { and, desc, eq, lt, or } from "drizzle-orm";
+import { db } from "@/db";
+import { videos } from "@/db/schema";
+import { createTRPCRouter, protectedProcedure } from "@/trpc/init";
+
+export const studioRouter = createTRPCRouter({
+  getMany: protectedProcedure
+    // The input defines what the frontend must send to this API
+    // .input() is a tRPC method that defines and validates the shape of data the procedure accepts
+    .input(
+      z.object({
+        // using Zod (schema validation library for TypeScript) to validate input parameters => make sure the input must be an object with exactly these two properties
+        cursor: z
+          .object({
+            id: z.uuid(),
+            updatedAt: z.date(),
+          })
+          .nullish(),
+        limit: z.number().min(1).max(100), // How many videos to fetch (between 1 and 100)
+      }),
+    )
+    .query(async ({ ctx, input }) => {
+      const { cursor, limit } = input;
+      const { id: userId } = ctx.user;
+
+      const data = await db
+        .select()
+        .from(videos)
+        .where(and(eq(videos.userId, userId), cursor ? or(lt(videos.updatedAt, cursor.updatedAt), and(eq(videos.updatedAt, cursor.updatedAt), lt(videos.id, cursor.id))) : undefined))
+        .orderBy(desc(videos.updatedAt), desc(videos.id))
+        .limit(limit + 1); // add 1 to the limit to check if there is more data
+
+      const hasMore = data.length > limit;
+
+      // Remove the last item if there is more data
+      const items = hasMore ? data.slice(0, -1) : data;
+
+      // Set the next cursor to the last item if there is more data
+      const lastItem = items[items.length - 1];
+      const nextCursor = hasMore
+        ? {
+            id: lastItem.id,
+            updatedAt: lastItem.updatedAt,
+          }
+        : null;
+
+      return { items, nextCursor };
+    }),
+});

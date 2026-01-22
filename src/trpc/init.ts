@@ -12,26 +12,22 @@ import superjson from "superjson";
 export const createTRPCContext = cache(async () => {
   const { userId } = await auth();
 
-  return { clerkUserId: userId };
+  return { clerkUserId: userId }; // this is ctx. This context will be available in all tRPC procedures
 });
 
 export type Context = Awaited<ReturnType<typeof createTRPCContext>>;
 
-// Avoid exporting the entire t-object
-// since it's not very descriptive.
-// For instance, the use of a t variable
-// is common in i18n libraries.
 const t = initTRPC.context<Context>().create({
   transformer: superjson,
 });
 
 // Base router and procedure helpers
-export const createTRPCRouter = t.router;
-export const createCallerFactory = t.createCallerFactory;
-export const baseProcedure = t.procedure;
+export const createTRPCRouter = t.router; // function to create API routers
+export const createCallerFactory = t.createCallerFactory; // creates server-side callers for tRPC procedures
+export const baseProcedure = t.procedure; // basic procedure with no middleware (public endpoints)
 
 export const protectedProcedure = t.procedure.use(async function isAuthed(opts) {
-  const { ctx } = opts;
+  const { ctx } = opts; // extracts context from the procedure call (options)
 
   if (!ctx.clerkUserId) {
     throw new TRPCError({ code: "UNAUTHORIZED" });
@@ -55,4 +51,8 @@ export const protectedProcedure = t.procedure.use(async function isAuthed(opts) 
       user,
     },
   });
+
+  // If all checks pass, calls next() to continue to the actual procedure
+  // Adds the full user object to context
+  // Now any procedure using protectedProcedure has access to ctx.user
 });
