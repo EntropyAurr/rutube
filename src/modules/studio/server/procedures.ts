@@ -38,6 +38,7 @@ export const studioRouter = createTRPCRouter({
 
       // Set the next cursor to the last item if there is more data
       const lastItem = items[items.length - 1];
+
       const nextCursor = hasMore
         ? {
             id: lastItem.id,
