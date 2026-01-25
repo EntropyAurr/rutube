@@ -7,6 +7,7 @@ import { DEFAULT_LIMIT } from "@/constants";
 import { trpc } from "@/trpc/client";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
 
 export function VideosSection() {
   return (
@@ -50,7 +51,13 @@ function VideosSectionSuspense() {
               .map((video) => (
                 <Link href={`/studio/videos/${video.id}`} key={video.id} legacyBehavior>
                   <TableRow className="cursor-pointer">
-                    <TableCell>{video.title}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-4">
+                        <div className="relative aspect-video w-36 shrink-0">
+                          <VideoThumbnail title={video.title} duration={video.duration || 0} imageUrl={video.thumbnailUrl} previewUrl={video.previewUrl} />
+                        </div>
+                      </div>
+                    </TableCell>
                     <TableCell>Visibility</TableCell>
                     <TableCell>Status</TableCell>
                     <TableCell>Date</TableCell>
