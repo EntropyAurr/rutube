@@ -8,6 +8,9 @@ import { trpc } from "@/trpc/client";
 import { InfiniteScroll } from "@/components/infinite-scroll";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { VideoThumbnail } from "@/modules/videos/ui/components/video-thumbnail";
+import { snakeCaseToTitle } from "@/lib/utils";
+import { format } from "date-fns";
+import { Globe2Icon, LockIcon } from "lucide-react";
 
 export function VideosSection() {
   return (
@@ -56,14 +59,26 @@ function VideosSectionSuspense() {
                         <div className="relative aspect-video w-36 shrink-0">
                           <VideoThumbnail title={video.title} duration={video.duration || 0} imageUrl={video.thumbnailUrl} previewUrl={video.previewUrl} />
                         </div>
+
+                        <div className="flex flex-col gap-y-1 overflow-hidden">
+                          <span className="line-clamp-1 text-sm">{video.title}</span>
+                          <span className="text-xs text-muted-foreground">{video.description || "No description"}</span>
+                        </div>
                       </div>
                     </TableCell>
-                    <TableCell>Visibility</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Date</TableCell>
-                    <TableCell>Views</TableCell>
-                    <TableCell>Comments</TableCell>
-                    <TableCell>Likes</TableCell>
+                    <TableCell>
+                      <div className="flex items-center">
+                        {video.visibility === "private" ? <LockIcon className="mr-2 size-4" /> : <Globe2Icon className="mr-2 size-4" />}
+                        {snakeCaseToTitle(video.visibility)}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center">{snakeCaseToTitle(video.muxStatus || "error")}</div>
+                    </TableCell>
+                    <TableCell className="truncate text-sm">{format(new Date(video.createdAt), "d MMM yyyy")}</TableCell>
+                    <TableCell>views</TableCell>
+                    <TableCell>comments</TableCell>
+                    <TableCell>likes</TableCell>
                   </TableRow>
                 </Link>
               ))}
