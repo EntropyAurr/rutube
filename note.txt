@@ -23,3 +23,5 @@ tRPC needs a consistent endpoint to send its queries and mutations. Without this
 
 9/ - selectedScrollSnap(): returns the index of the snap point the carousel is currently resting on
 - scrollSnapList(): returns an array of the "snap points" (the exact positions where the carousel stops)
+
+10/ TEST
