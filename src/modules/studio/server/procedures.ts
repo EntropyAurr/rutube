@@ -21,6 +21,7 @@ export const studioRouter = createTRPCRouter({
 
     return video;
   }),
+
   getMany: protectedProcedure
     // The input defines what the frontend must send to this API
     // .input() is a tRPC method that defines and validates the shape of data the procedure accepts
