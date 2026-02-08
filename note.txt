@@ -31,3 +31,5 @@ tRPC needs a consistent endpoint to send its queries and mutations. Without this
     => this video.id is the videoId (dynamic segment) that extracted by awaiting params
     => videoId (params) will have the value first when getMany is called and map the return videos arrays
     => when getOne is called, pass this {id: videoId}
+
+11/ {control, handleSubmit} = useForm()
