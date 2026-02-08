@@ -10,6 +10,7 @@ interface PageProps {
 export default async function Page({ params }: PageProps) {
   const { videoId } = await params;
 
+  // store caches to the server
   void trpc.studio.getOne.prefetch({ id: videoId });
   void trpc.categories.getMany.prefetch();
 
