@@ -1,3 +1,27 @@
+* Dependencies:
+A/ Clerk: authentication and usage management service
+
+B/ Neon: serverless Postgres database platform with branching feature
+
+C/ Drizzle: handle the database interactions in TypeScript and JavaScript applications while maintaining strong type safety and performance
+=> Neon = Database (WHERE data lives). It's a Postgres database hosting service
+   Drizzle = ORM (HOW you talk to data). It's a TypeScript library for writing database queries
+
+D/ tRPC (TypeScript Remote Procedure Call): a framework for building end-to-end type-safe APIs in TypeScript. It eliminates the need for manually defining API routes, request validation, and client-side fetching logic. Instead, your frontend can call backend functions as if they were local functions.
+
+E/ Upstash: serverless data platform => used for 
+    - Rate limiting APIs
+    - Session storage
+    - Caching expensive queries
+    - Real-time counters/analytics
+    - Edge/serverless applications
+    - Temporary data storage
++ Rate limiting APIs: controls traffic by restricting the number of requests a client can make within a specific timeframe, preventing server overload, abuse, and ensuring system stability.
+
+F/ Mux: video infrastructure platform that provides APIs for video streaming.
+
+G/ uploadthing: file upload service
+
 1/ tRPC: 
 - TypeScript-first framework for building end-to-end type-safe APIs.
 
@@ -24,4 +48,14 @@ tRPC needs a consistent endpoint to send its queries and mutations. Without this
 9/ - selectedScrollSnap(): returns the index of the snap point the carousel is currently resting on
 - scrollSnapList(): returns an array of the "snap points" (the exact positions where the carousel stops)
 
-10/ TEST
+10/ fetching and playing video
+- each user will have one studio: getOne method of studioRouter receives an "id" parameter and userId (by accessing ctx context) => find the video in the videos table that has the "id" (primary key) that matches the "id" passed when getOne is called with the correct user - userId (foreign key in videos table) matches the userId of ctx.user.
+- use getMany method of studioRouter to get all videos for using in videoSection to show general information of studio.
+    + map through videos array to get the id of video => <Link href={`/studio/videos/${video.id}`} >
+    => this video.id is the videoId (dynamic segment) that extracted by awaiting params
+    => videoId (params) will have the value first when getMany is called and map the return videos arrays
+    => when getOne is called, pass this {id: videoId}
+
+11/ {control, handleSubmit} = useForm()
+
+12/ trpc.useUtils(): React hook that gives you access to utility functions for managing tRPC queries and mutations.
