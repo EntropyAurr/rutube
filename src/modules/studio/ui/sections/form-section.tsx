@@ -1,26 +1,27 @@
 "use client";
 
-import z from "zod";
-import { trpc } from "@/trpc/client";
-import { videoUpdateSchema } from "@/db/schema";
-import { Suspense, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, LockIcon, MoreVerticalIcon, RotateCcwIcon, Sparkles, TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Skeleton } from "@/components/ui/skeleton";
 import { Textarea } from "@/components/ui/textarea";
-import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
+import { videoUpdateSchema } from "@/db/schema";
 import { snakeCaseToTitle } from "@/lib/utils";
-import Image from "next/image";
 import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
+import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
+import { trpc } from "@/trpc/client";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
 
 interface FormSectionProps {
@@ -38,7 +39,70 @@ export function FormSection({ videoId }: FormSectionProps) {
 }
 
 function FormSectionSkeleton() {
-  return <p>Loading...</p>;
+  return (
+    <div>
+      <div className="mb-6 flex items-center justify-between">
+        <div className="space-y-2">
+          <Skeleton className="h-7 w-32" />
+          <Skeleton className="h-4 w-40" />
+        </div>
+
+        <Skeleton className="h-9 w-24" />
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-5">
+        <div className="space-y-8 lg:col-span-3">
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-16" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-24" />
+            <Skeleton className="h-[220px] w-full" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-[84px] w-[153px]" />
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-y-8 lg:col-span-2">
+          <div className="flex flex-col gap-4 overflow-hidden rounded-xl bg-[#f9f9f9]">
+            <Skeleton className="aspect-video" />
+
+            <div className="space-y-6 p-4">
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-20" />
+                <Skeleton className="h-5 w-full" />
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-5 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-24" />
+                <Skeleton className="h-5 w-32" />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-2">
+            <Skeleton className="h-5 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 function SuspenseFormSection({ videoId }: FormSectionProps) {
@@ -196,11 +260,6 @@ function SuspenseFormSection({ videoId }: FormSectionProps) {
                             <DropdownMenuItem onClick={() => setThumbnailModalOpen(true)}>
                               <ImagePlusIcon className="mr-1 size-4" />
                               Change
-                            </DropdownMenuItem>
-
-                            <DropdownMenuItem>
-                              <Sparkles className="mr-1 size-4" />
-                              AI-generated
                             </DropdownMenuItem>
 
                             <DropdownMenuItem onClick={() => restoreThumbnail.mutate({ id: videoId })}>

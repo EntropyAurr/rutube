@@ -1,10 +1,10 @@
 import { db } from "@/db";
 import { videos } from "@/db/schema";
 import { mux } from "@/lib/mux";
-import { VideoAssetCreatedWebhookEvent, VideoAssetDeletedWebhookEvent, VideoAssetErroredWebhookEvent, VideoAssetReadyWebhookEvent, VideoAssetTrackReadyWebhookEvent } from "@mux/mux-node/resources/webhooks.mjs";
 import { eq } from "drizzle-orm";
 import { headers } from "next/headers";
 import { UTApi } from "uploadthing/server";
+import { VideoAssetCreatedWebhookEvent, VideoAssetDeletedWebhookEvent, VideoAssetErroredWebhookEvent, VideoAssetReadyWebhookEvent, VideoAssetTrackReadyWebhookEvent } from "@mux/mux-node/resources/webhooks.mjs";
 
 type WebhookEvent = VideoAssetCreatedWebhookEvent | VideoAssetReadyWebhookEvent | VideoAssetErroredWebhookEvent | VideoAssetTrackReadyWebhookEvent | VideoAssetDeletedWebhookEvent;
 
@@ -22,8 +22,8 @@ export async function POST(req: Request) {
     return new Response("No signature found", { status: 400 });
   }
 
-  const payload = await req.json();
-  const body = JSON.stringify(payload);
+  const payload = await req.json(); // takes JSON input and parses it to produce JS object
+  const body = JSON.stringify(payload); // converts a JS object into a JSON string
 
   mux.webhooks.verifySignature(body, { "mux-signature": muxSignature }, SIGNING_SECRET);
 
