@@ -1,5 +1,16 @@
 "use client";
 
+import { trpc } from "@/trpc/client";
+import Image from "next/image";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
+import { useForm } from "react-hook-form";
+import { toast } from "sonner";
+import z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
@@ -11,17 +22,6 @@ import { videoUpdateSchema } from "@/db/schema";
 import { snakeCaseToTitle } from "@/lib/utils";
 import { THUMBNAIL_FALLBACK } from "@/modules/videos/constants";
 import { VideoPlayer } from "@/modules/videos/ui/components/video-player";
-import { trpc } from "@/trpc/client";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { CopyCheckIcon, CopyIcon, Globe2Icon, ImagePlusIcon, LockIcon, MoreVerticalIcon, RotateCcwIcon, TrashIcon } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
-import { ErrorBoundary } from "react-error-boundary";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import z from "zod";
 import { ThumbnailUploadModal } from "../components/thumbnail-upload-modal";
 
 interface FormSectionProps {
@@ -107,8 +107,7 @@ function FormSectionSkeleton() {
 
 function SuspenseFormSection({ videoId }: FormSectionProps) {
   const router = useRouter();
-  const utils = trpc.useUtils();
-
+  const utils = trpc.useUtils(); // gives the access to query cache utilities => control cached API data
   const [thumbnailModalOpen, setThumbnailModalOpen] = useState(false);
 
   const [video] = trpc.studio.getOne.useSuspenseQuery({ id: videoId });

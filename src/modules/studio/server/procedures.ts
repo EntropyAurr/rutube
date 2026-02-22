@@ -10,6 +10,7 @@ export const studioRouter = createTRPCRouter({
     const { id: userId } = ctx.user;
     const { id } = input;
 
+    // array destructuring: take the first element of the result array & assign it to video
     const [video] = await db
       .select()
       .from(videos)

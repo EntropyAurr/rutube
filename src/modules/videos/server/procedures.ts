@@ -8,6 +8,7 @@ import { UTApi } from "uploadthing/server";
 import z from "zod";
 
 export const videosRouter = createTRPCRouter({
+  // GET DATA OF A VIDEO
   getOne: baseProcedure.input(z.object({ id: z.uuid() })).query(async ({ input, ctx }) => {
     const { clerkUserId } = ctx;
 
@@ -48,6 +49,7 @@ export const videosRouter = createTRPCRouter({
     return existingVideo;
   }),
 
+  // CREATE NEW VIDEO
   create: protectedProcedure.mutation(async ({ ctx }) => {
     const { id: userId } = ctx.user;
 
@@ -75,6 +77,7 @@ export const videosRouter = createTRPCRouter({
     return { video: video, url: upload.url };
   }),
 
+  // UPDATE VIDEO
   update: protectedProcedure.input(videoUpdateSchema).mutation(async ({ ctx, input }) => {
     const { id: userId } = ctx.user;
 
@@ -97,6 +100,7 @@ export const videosRouter = createTRPCRouter({
     return updatedVideo;
   }),
 
+  // REMOVE VIDEO
   remove: protectedProcedure.input(z.object({ id: z.uuid() })).mutation(async ({ ctx, input }) => {
     const { id: userId } = ctx.user;
 
@@ -112,6 +116,7 @@ export const videosRouter = createTRPCRouter({
     return removedVideo;
   }),
 
+  // RESTORE THUMBNAIL
   restoreThumbnail: protectedProcedure.input(z.object({ id: z.uuid() })).mutation(async ({ ctx, input }) => {
     const { id: userId } = ctx.user;
 

@@ -68,19 +68,19 @@ export const videoUpdateSchema = createUpdateSchema(videos);
 
 // Relationships
 export const userRelations = relations(users, ({ many }) => ({
+  // One user can have many: videos, videoViews, videoReactions
   videos: many(videos),
   videoViews: many(videoViews),
   videoReactions: many(videoReactions),
 }));
 
 export const categoryRelations = relations(categories, ({ many }) => ({
+  // One category can have many videos
   videos: many(videos),
 }));
 
-// Many-to-One relationships:
-// many videos belong to one user
-// many videos belong to one category
 export const videoRelations = relations(videos, ({ one, many }) => ({
+  // One video belongs to exactly one user, one category but can have many: views, reactions
   user: one(users, {
     fields: [videos.userId],
     references: [users.id],

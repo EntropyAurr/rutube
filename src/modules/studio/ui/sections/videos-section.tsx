@@ -82,6 +82,7 @@ function VideoSectionSkeleton() {
 }
 
 function VideosSectionSuspense() {
+  // videos has a "pages" property because infinite queries paginate data, and each fetch returns one page
   const [videos, query] = trpc.studio.getMany.useSuspenseInfiniteQuery(
     {
       limit: DEFAULT_LIMIT,
