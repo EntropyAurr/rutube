@@ -47,8 +47,7 @@ export const videosRouter = createTRPCRouter({
       .from(videos)
       .innerJoin(users, eq(videos.userId, users.id)) // join users
       .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id)) // join viewerReactions
-      .where(eq(videos.id, input.id)) // filter by video ID
-      .groupBy(videos.id, users.id, viewerReactions.type); // group for aggregates
+      .where(eq(videos.id, input.id)); // filter by video ID
 
     if (!existingVideo) {
       throw new TRPCError({ code: "NOT_FOUND" });
