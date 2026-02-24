@@ -137,8 +137,9 @@ export const videosRouter = createTRPCRouter({
       throw new TRPCError({ code: "NOT_FOUND" });
     }
 
+    // Delete existing custom thumbnail (if any)
     if (existingVideo.thumbnailKey) {
-      const utApi = new UTApi();
+      const utApi = new UTApi(); // UploadThing's server-side API client with available methods: uploadFiles(files), deleteFiles(fileKeys), listFiles(), uploadFilesFromUrl(url)
 
       await utApi.deleteFiles(existingVideo.thumbnailKey);
       await db
@@ -153,7 +154,9 @@ export const videosRouter = createTRPCRouter({
 
     const utApi = new UTApi();
 
+    // Fetch thumbnail from Mux
     const tempThumbnailUrl = `https://image.mux.com/${existingVideo.muxPlaybackId}/thumbnail.jpg`;
+    // Upload this thumbnail to UploadThing
     const uploadedThumbnail = await utApi.uploadFilesFromUrl(tempThumbnailUrl);
 
     if (!uploadedThumbnail.data) {
@@ -162,6 +165,7 @@ export const videosRouter = createTRPCRouter({
 
     const { key: thumbnailKey, url: thumbnailUrl } = uploadedThumbnail.data;
 
+    // Update database with new thumbnail
     const [updatedVideo] = await db
       .update(videos)
       .set({ thumbnailUrl, thumbnailKey })
