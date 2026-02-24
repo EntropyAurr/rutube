@@ -1,5 +1,5 @@
 import { db } from "@/db";
-import { users, videoReactions, videos, videoUpdateSchema, videoViews } from "@/db/schema";
+import { subscriptions, users, videoReactions, videos, videoUpdateSchema, videoViews } from "@/db/schema";
 import { mux } from "@/lib/mux";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
@@ -34,8 +34,15 @@ export const videosRouter = createTRPCRouter({
         .where(inArray(videoReactions.userId, userId ? [userId] : [])),
     );
 
+    const viewerSubscriptions = db.$with("viewer_subscriptions").as(
+      db
+        .select()
+        .from(subscriptions)
+        .where(inArray(subscriptions.viewerId, userId ? [userId] : [])),
+    );
+
     const [existingVideo] = await db
-      .with(viewerReactions)
+      .with(viewerReactions, viewerSubscriptions)
       .select({
         ...getTableColumns(videos), // get all video columns
         user: { ...getTableColumns(users) }, // create nested user object that contains all user columns
@@ -45,8 +52,9 @@ export const videosRouter = createTRPCRouter({
         viewerReaction: viewerReactions.type,
       })
       .from(videos)
-      .innerJoin(users, eq(videos.userId, users.id)) // join users
-      .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id)) // join viewerReactions
+      .innerJoin(users, eq(videos.userId, users.id))
+      .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id))
+      .leftJoin(viewerSubscriptions, eq(viewerSubscriptions.creatorId, users.id))
       .where(eq(videos.id, input.id)); // filter by video ID
 
     if (!existingVideo) {
