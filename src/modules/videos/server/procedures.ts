@@ -23,6 +23,7 @@ export const videosRouter = createTRPCRouter({
       userId = user.id;
     }
 
+    // using "with" clause to simplify complex queries by splitting them into smaller subqueries called common table expressions (CTEs)
     const viewerReactions = db.$with("viewer_reactions").as(
       db
         .select({
@@ -35,12 +36,19 @@ export const videosRouter = createTRPCRouter({
 
     const [existingVideo] = await db
       .with(viewerReactions)
-      .select({ ...getTableColumns(videos), user: { ...getTableColumns(users) }, viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)), likeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "like"))), dislikeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))), viewerReaction: viewerReactions.type })
+      .select({
+        ...getTableColumns(videos), // get all video columns
+        user: { ...getTableColumns(users) }, // create nested user object that contains all user columns
+        viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)), // aggregate: total views
+        likeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "like"))),
+        dislikeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))),
+        viewerReaction: viewerReactions.type,
+      })
       .from(videos)
-      .innerJoin(users, eq(videos.userId, users.id))
-      .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id))
-      .where(eq(videos.id, input.id))
-      .groupBy(videos.id, users.id, viewerReactions.type);
+      .innerJoin(users, eq(videos.userId, users.id)) // join users
+      .leftJoin(viewerReactions, eq(viewerReactions.videoId, videos.id)) // join viewerReactions
+      .where(eq(videos.id, input.id)) // filter by video ID
+      .groupBy(videos.id, users.id, viewerReactions.type); // group for aggregates
 
     if (!existingVideo) {
       throw new TRPCError({ code: "NOT_FOUND" });
