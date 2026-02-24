@@ -75,9 +75,9 @@ export const videosRouter = createTRPCRouter({
             ],
           },
         ],
-        static_renditions: [{ resolution: "1080p" }],
+        static_renditions: [{ resolution: "1080p" }], // creates downloadable 1080p MP4
       },
-      cors_origin: "*",
+      cors_origin: "*", // allow uploads from anywhere
     });
 
     const [video] = await db.insert(videos).values({ userId, title: "Untitled", muxStatus: "waiting", muxUploadId: upload.id }).returning();
