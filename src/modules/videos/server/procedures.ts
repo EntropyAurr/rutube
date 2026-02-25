@@ -3,7 +3,7 @@ import { subscriptions, users, videoReactions, videos, videoUpdateSchema, videoV
 import { mux } from "@/lib/mux";
 import { baseProcedure, createTRPCRouter, protectedProcedure } from "@/trpc/init";
 import { TRPCError } from "@trpc/server";
-import { and, eq, getTableColumns, inArray } from "drizzle-orm";
+import { and, eq, getTableColumns, inArray, isNotNull } from "drizzle-orm";
 import { UTApi } from "uploadthing/server";
 import z from "zod";
 
@@ -45,7 +45,7 @@ export const videosRouter = createTRPCRouter({
       .with(viewerReactions, viewerSubscriptions)
       .select({
         ...getTableColumns(videos), // get all video columns
-        user: { ...getTableColumns(users) }, // create nested user object that contains all user columns
+        user: { ...getTableColumns(users), subscriberCount: db.$count(subscriptions, eq(subscriptions.creatorId, users.id)), viewerSubscribed: isNotNull(viewerSubscriptions.viewerId).mapWith(Boolean) },
         viewCount: db.$count(videoViews, eq(videoViews.videoId, videos.id)), // aggregate: total views
         likeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "like"))),
         dislikeCount: db.$count(videoReactions, and(eq(videoReactions.videoId, videos.id), eq(videoReactions.type, "dislike"))),
