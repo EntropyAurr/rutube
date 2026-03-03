@@ -5,9 +5,35 @@ import { VideoMenu } from "./video-menu";
 import { VideoDescription } from "./video-description";
 import { useMemo } from "react";
 import { format, formatDistanceToNow } from "date-fns";
+import { Skeleton } from "@/components/ui/skeleton";
 
 interface VideoTopRowProps {
   video: VideoGetOneOuput;
+}
+
+export function VideoTopRowSkeleton() {
+  return (
+    <div className="mt-4 flex flex-col gap-4">
+      <div className="flex flex-col gap-2">
+        <Skeleton className="md:2/5 h-6 w-4/5" />
+      </div>
+
+      <div className="flex w-full items-center justify-between">
+        <div className="flex w-[70%] items-center gap-3">
+          <Skeleton className="h-10 w-10 shrink-0 rounded-full" />
+
+          <div className="flex w-full flex-col gap-2">
+            <Skeleton className="md:2/6 h-5 w-4/5" />
+            <Skeleton className="md:1/5 h-5 w-3/5" />
+          </div>
+        </div>
+
+        <Skeleton className="md:1/6 h-9 w-2/6 rounded-full" />
+      </div>
+
+      <div className="h-[120px] w-full" />
+    </div>
+  );
 }
 
 export function VideoTopRow({ video }: VideoTopRowProps) {
