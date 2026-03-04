@@ -36,16 +36,27 @@ export function CommentForm({ videoId, onSuccess }: CommentFormProps) {
     },
   });
 
-  const form = useForm<z.infer<typeof commentInsertSchema>>({
-    resolver: zodResolver(commentInsertSchema.omit({ userId: true })),
+  const commentFormSchema = commentInsertSchema.omit({ userId: true });
+
+  const form = useForm<z.infer<typeof commentFormSchema>>({
+    resolver: zodResolver(commentFormSchema),
     defaultValues: {
       videoId,
       value: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof commentInsertSchema>) {
-    create.mutate(values);
+  function onSubmit(values: z.infer<typeof commentFormSchema>) {
+    if (!user?.id) {
+      toast.error("You must be signed in to comment");
+      clerk.openSignIn();
+      return;
+    }
+
+    create.mutate({
+      ...values,
+      userId: user.id,
+    } as z.infer<typeof commentInsertSchema>);
   }
 
   return (
