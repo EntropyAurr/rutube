@@ -14,6 +14,7 @@ const buttonVariants = cva("inline-flex items-center justify-center gap-2 whites
       ghost: "hover:bg-accent hover:text-accent-foreground",
       link: "text-primary underline-offset-4 hover:underline",
       custom: "bg-teal-600 text-white",
+      tertiary: "bg-background hover:bg-teal-500/10 text-teal-500",
     },
     size: {
       default: "h-9 px-4 py-2",
