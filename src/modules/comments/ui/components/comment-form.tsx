@@ -12,7 +12,7 @@ import { commentInsertSchema } from "@/db/schema";
 
 interface CommentFormProps {
   videoId: string;
-  parentId: string;
+  parentId?: string;
   onSuccess?: () => void;
   onCancle?: () => void;
   variant?: "comment" | "reply";
@@ -26,6 +26,7 @@ export function CommentForm({ videoId, parentId, onSuccess, onCancle, variant = 
   const create = trpc.comments.create.useMutation({
     onSuccess: () => {
       utils.comments.getMany.invalidate({ videoId });
+      utils.comments.getMany.invalidate({ videoId, parentId });
       form.reset();
       toast.success("Comment added");
       onSuccess?.();

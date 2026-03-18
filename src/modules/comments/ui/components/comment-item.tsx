@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 import { CommentForm } from "./comment-form";
+import { CommentReplies } from "./comment-replies";
 
 interface CommentItemProps {
   comment: CommentsGetManyOuput["items"][number];
@@ -70,7 +71,7 @@ export function CommentItem({ comment, variant = "comment" }: CommentItemProps) 
     <div>
       <div className="flex gap-4">
         <Link href={`/users/${comment.userId}`}>
-          <UserAvatar size="lg" imageUrl={comment.user.imageUrl} name={comment.user.name} />
+          <UserAvatar size={variant === "comment" ? "lg" : "sm"} imageUrl={comment.user.imageUrl} name={comment.user.name} />
         </Link>
 
         <div className="min-w-0 flex-1">
@@ -114,12 +115,10 @@ export function CommentItem({ comment, variant = "comment" }: CommentItemProps) 
           </DropdownMenuTrigger>
 
           <DropdownMenuContent align="end">
-            {variant === "comment" && (
-              <DropdownMenuItem onClick={() => setIsReplyOpen(true)}>
-                <MessagesSquareIcon className="size-4" />
-                Reply
-              </DropdownMenuItem>
-            )}
+            <DropdownMenuItem onClick={() => setIsReplyOpen(true)}>
+              <MessagesSquareIcon className="size-4" />
+              Reply
+            </DropdownMenuItem>
 
             {comment.user.clerkId === userId && (
               <DropdownMenuItem onClick={() => remove.mutate({ id: comment.id })}>
@@ -156,6 +155,8 @@ export function CommentItem({ comment, variant = "comment" }: CommentItemProps) 
           </Button>
         </div>
       )}
+
+      {comment.replyCount > 0 && variant === "comment" && isRepliesOpen && <CommentReplies parentId={comment.id} videoId={comment.videoId} />}
     </div>
   );
 }
