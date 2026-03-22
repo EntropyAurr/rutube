@@ -14,14 +14,14 @@ export function VideoView({ videoId }: VideoViewProps) {
           <VideoSection videoId={videoId} />
 
           <div className="mt-4 block xl:hidden">
-            <SuggestionsSection />
+            <SuggestionsSection videoId={videoId} />
           </div>
 
           <CommentsSection videoId={videoId} />
         </div>
 
         <div className="shrink-1 hidden w-full xl:block xl:w-[380px] 2xl:w-[460px]">
-          <SuggestionsSection />
+          <SuggestionsSection videoId={videoId} />
         </div>
       </div>
     </div>
