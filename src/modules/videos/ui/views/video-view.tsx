@@ -14,7 +14,7 @@ export function VideoView({ videoId }: VideoViewProps) {
           <VideoSection videoId={videoId} />
 
           <div className="mt-4 block xl:hidden">
-            <SuggestionsSection videoId={videoId} />
+            <SuggestionsSection videoId={videoId} isManual />
           </div>
 
           <CommentsSection videoId={videoId} />
