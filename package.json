@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "dev:webhook": "cmd /c ngrok http 3000 --url unplatted-theologically-corrin.ngrok-free.dev",
+    "dev:webhook": "cmd /c ngrok start --all --config C:/Users/ruabt/AppData/Local/ngrok/rutube.yml",
     "dev:all": "concurrently \"bun run dev:webhook\" \"bun run dev\"",
     "build": "next build",
     "start": "next start",
