@@ -12,6 +12,8 @@ import superjson from "superjson";
 export const createTRPCContext = cache(async () => {
   const { userId } = await auth();
 
+  console.log("tRPC context userId:", userId);
+
   return { clerkUserId: userId }; // this is ctx. This context will be available in all tRPC procedures
 });
 
