@@ -1,4 +1,4 @@
-// Defining a router
+// DEFINING ROUTER to handle queries, mutations & subscriptions
 
 import { createTRPCRouter } from "../init";
 import { categoriesRouter } from "@/modules/categories/server/procedures";

@@ -5,9 +5,9 @@ B/ Neon: serverless Postgres database platform with branching feature
 
 C/ Drizzle: handle the database interactions in TypeScript and JavaScript applications while maintaining strong type safety and performance
 => Neon = Database (WHERE data lives). It's a Postgres database hosting service
-   Drizzle = ORM (HOW you talk to data). It's a TypeScript library for writing database queries
+   Drizzle = ORM (HOW to talk to data). It's a TypeScript library for writing database queries
 
-D/ tRPC (TypeScript Remote Procedure Call): a framework for building end-to-end type-safe APIs in TypeScript. It eliminates the need for manually defining API routes, request validation, and client-side fetching logic. Instead, your frontend can call backend functions as if they were local functions.
+D/ tRPC (TypeScript Remote Procedure Call): a framework for building end-to-end type-safe APIs in TypeScript. It eliminates the need for manually defining API routes, request validation, and client-side fetching logic. Instead, the frontend can call backend functions as if they were local functions.
 
 E/ Upstash: serverless data platform => used for 
     - Rate limiting APIs
