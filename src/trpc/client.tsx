@@ -8,6 +8,7 @@ import { useState } from "react";
 import superjson from "superjson";
 import { makeQueryClient } from "./query-client";
 import type { AppRouter } from "./routers/_app";
+import { APP_URL } from "@/constants";
 
 export const trpc = createTRPCReact<AppRouter>();
 
@@ -33,8 +34,10 @@ function getUrl() {
     // if on the brower
     if (typeof window !== "undefined") return "";
 
+    console.log({ appURL: APP_URL });
+
     // if on the server
-    if (process.env.VERCEL_URL) return `https://${process.env.VERCEL_URL}`;
+    if (APP_URL) return `https://${APP_URL}`;
 
     // local development case
     return "http://localhost:3000";
